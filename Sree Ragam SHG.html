@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sree Ragam Self Help Group - Calculators</title>
+    <!-- Tailwind CSS for styling -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body {
+            /* Background set to your uploaded logo image */
+            background-image: url('1000085335.png');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            background-attachment: fixed;
+        }
+        /* Semi-transparent dark overlay to make the calculator readable over the logo */
+        .bg-overlay {
+            background: linear-gradient(rgba(15, 23, 42, 0.9), rgba(15, 23, 42, 0.95));
+        }
+    </style>
+</head>
+<body class="bg-slate-950 text-slate-100 min-h-screen flex flex-col items-center justify-center p-4">
+
+    <!-- Main Container with Background Overlay -->
+    <div class="bg-overlay w-full max-w-lg p-6 sm:p-8 rounded-2xl shadow-2xl border border-amber-500/30 backdrop-blur-md relative">
+        
+        <!-- About Icon Positioned in Top Corner -->
+        <button onclick="openAboutModal()" class="absolute top-4 right-4 p-2 text-slate-400 hover:text-amber-400 transition z-10" title="About this website">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+            </svg>
+        </button>
+
+        <!-- Header / Branding -->
+        <div class="text-center mb-5">
+            <h1 class="text-xs uppercase tracking-widest text-amber-400 font-semibold mb-1">Beerangole</h1>
+            <h2 class="text-2xl sm:text-3xl font-extrabold text-white tracking-wide">Sree Ragam Self Help Group</h2>
+            <p class="text-xs text-slate-400 mt-1">Digital Ledger & Utility Suite</p>
+        </div>
+
+        <!-- Navigation Tabs to Switch Views -->
+        <div class="flex rounded-xl bg-slate-900/90 p-1 mb-6 border border-slate-800">
+            <button onclick="switchTab('loan')" id="loanTabBtn" class="flex-1 py-2 text-xs sm:text-sm font-bold rounded-lg transition duration-200 bg-amber-500 text-slate-950 shadow">
+                Loan Calculator
+            </button>
+            <button onclick="switchTab('basic')" id="basicTabBtn" class="flex-1 py-2 text-xs sm:text-sm font-bold rounded-lg transition duration-200 text-slate-400 hover:text-white">
+                Basic Calculator
+            </button>
+        </div>
+        
+        <!-- PAGE 1: LOAN CALCULATOR -->
+        <div id="loanView" class="space-y-4">
+            <!-- Loan Balance Input -->
+            <div>
+                <label class="block text-slate-300 text-sm font-semibold mb-1.5">Loan Balance (₹)</label>
+                <input type="number" id="principal" value="100000" class="w-full px-4 py-2.5 bg-slate-900/80 border border-slate-700 rounded-xl text-white focus:outline-none focus:ring-2 focus:ring-amber-400">
+            </div>
+
+            <!-- Interest Rate Input -->
+            <div>
+                <label class="block text-slate-300 text-sm font-semibold mb-1.5">Interest Rate (%)</label>
+                <input type="number" id="rate" value="5" step="0.01" class="w-full px-4 py-2.5 bg-slate-900/80 border border-slate-700 rounded-xl text-white focus:outline-none focus:ring-2 focus:ring-amber-400">
+            </div>
+
+            <!-- Start Date Input -->
+            <div>
+                <label class="block text-slate-300 text-sm font-semibold mb-1.5">Start Date (🗓️)</label>
+                <input type="date" id="startDate" value="2026-09-14" class="w-full px-4 py-2.5 bg-slate-900/80 border border-slate-700 rounded-xl text-white focus:outline-none focus:ring-2 focus:ring-amber-400">
+            </div>
+
+            <!-- Amount Paid Today Input -->
+            <div>
+                <label class="block text-slate-300 text-sm font-semibold mb-1.5">Amount Paid Today (₹)</label>
+                <input type="number" id="paymentMade" value="5000" class="w-full px-4 py-2.5 bg-slate-900/80 border border-slate-700 rounded-xl text-white focus:outline-none focus:ring-2 focus:ring-amber-400">
+            </div>
+
+            <!-- End Date Input -->
+            <div class="mb-6">
+                <label class="block text-slate-300 text-sm font-semibold mb-1.5">End Date (🗓️)</label>
+                <input type="date" id="endDate" value="2026-09-21" class="w-full px-4 py-2.5 bg-slate-900/80 border border-slate-700 rounded-xl text-white focus:outline-none focus:ring-2 focus:ring-amber-400">
+            </div>
+
+            <!-- Calculate Button -->
+            <button onclick="calculateLoan()" class="w-full bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700 text-slate-950 font-bold py-3 rounded-xl transition duration-200 shadow-lg">Calculate</button>
+
+            <!-- Result Box -->
+            <div id="result" class="mt-6 p-5 bg-slate-900/90 rounded-xl border border-slate-800 hidden">
+                <h3 class="font-bold text-base mb-3 text-amber-400 border-b border-slate-800 pb-2 flex justify-between items-center">
+                    <span>Calculation Summary</span>
+                    <span class="text-xs font-normal text-slate-400">SHG Ledger Format</span>
+                </h3>
+                <div class="space-y-2 text-sm">
+                    <div class="flex justify-between">
+                        <span class="text-slate-400">Loan balance:</span>
+                        <span id="resPrincipal" class="font-semibold text-white"></span>
+                    </div>
+                    <div class="flex justify-between">
+                        <span class="text-slate-400">Payment made today:</span>
+                        <span id="resPayment" class="font-semibold text-emerald-400"></span>
+                    </div>
+                    <div class="flex justify-between">
+                        <span class="text-slate-400">Number of days:</span>
+                        <span id="resDays" class="font-semibold text-white"></span>
+                    </div>
+                    <div class="flex justify-between">
+                        <span class="text-slate-400">Interest (exact):</span>
+                        <span id="resInterest" class="font-semibold text-white"></span>
+                    </div>
+                    <div class="flex justify-between">
+                        <span class="text-slate-400">Interest (rounded):</span>
+                        <span id="resRounded" class="font-semibold text-amber-400"></span>
+                    </div>
+                    <div class="flex justify-between">
+                        <span class="text-slate-400">Principal repayment:</span>
+                        <span id="resPaymentMinusInterest" class="font-semibold text-white"></span>
+                    </div>
+                    <div class="flex justify-between pt-3 border-t border-slate-800 text-base font-bold">
+                        <span class="text-slate-200">Remaining Loan:</span>
+                        <span id="resFinal" class="text-amber-400 text-lg"></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- PAGE 2: BASIC CALCULATOR -->
+        <div id="basicView" class="hidden space-y-4">
+            <!-- Screen Display -->
+            <div>
+                <input type="text" id="calcDisplay" readonly value="0" class="w-full px-4 py-3 bg-slate-900 border border-slate-700 rounded-xl text-right text-2xl font-mono text-amber-400 focus:outline-none">
+            </div>
+
+            <!-- Calculator Keypad Grid -->
+            <div class="grid grid-cols-4 gap-2.5">
+                <button onclick="clearBasic()" class="p-3.5 bg-red-500/20 text-red-400 hover:bg-red-500/30 font-bold rounded-xl border border-red-500/30 transition">C</button>
+                <button onclick="backspaceBasic()" class="p-3.5 bg-slate-800 text-slate-300 hover:bg-slate-700 font-bold rounded-xl border border-slate-700 transition">⌫</button>
+                <button onclick="appendBasic('/')" class="p-3.5 bg-amber-500/20 text-amber-400 hover:bg-amber-500/30 font-bold rounded-xl border border-amber-500/30 transition">÷</button>
+                <button onclick="appendBasic('*')" class="p-3.5 bg-amber-500/20 text-amber-400 hover:bg-amber-500/30 font-bold rounded-xl border border-amber-500/30 transition">×</button>
+
+                <button onclick="appendBasic('7')" class="p-3.5 bg-slate-900/80 text-white hover:bg-slate-800 font-bold rounded-xl border border-slate-700 transition">7</button>
+                <button onclick="appendBasic('8')" class="p-3.5 bg-slate-900/80 text-white hover:bg-slate-800 font-bold rounded-xl border border-slate-700 transition">8</button>
+                <button onclick="appendBasic('9')" class="p-3.5 bg-slate-900/80 text-white hover:bg-slate-800 font-bold rounded-xl border border-slate-700 transition">9</button>
+                <!-- Light Blue Minus Icon -->
+                <button onclick="appendBasic('-')" class="p-3.5 bg-sky-500/20 text-sky-400 hover:bg-sky-500/30 font-bold rounded-xl border border-sky-500/30 transition">-</button>
+
+                <button onclick="appendBasic('4')" class="p-3.5 bg-slate-900/80 text-white hover:bg-slate-800 font-bold rounded-xl border border-slate-700 transition">4</button>
+                <button onclick="appendBasic('5')" class="p-3.5 bg-slate-900/80 text-white hover:bg-slate-800 font-bold rounded-xl border border-slate-700 transition">5</button>
+                <button onclick="appendBasic('6')" class="p-3.5 bg-slate-900/80 text-white hover:bg-slate-800 font-bold rounded-xl border border-slate-700 transition">6</button>
+                <!-- Light Green Plus Icon (increased size with row-span-2) -->
+                <button onclick="appendBasic('+')" class="row-span-2 p-3.5 bg-emerald-500/20 text-emerald-400 hover:bg-emerald-500/30 font-bold rounded-xl border border-emerald-500/30 flex items-center justify-center transition shadow-lg text-lg">+</button>
+
+                <button onclick="appendBasic('1')" class="p-3.5 bg-slate-900/80 text-white hover:bg-slate-800 font-bold rounded-xl border border-slate-700 transition">1</button>
+                <button onclick="appendBasic('2')" class="p-3.5 bg-slate-900/80 text-white hover:bg-slate-800 font-bold rounded-xl border border-slate-700 transition">2</button>
+                <button onclick="appendBasic('3')" class="p-3.5 bg-slate-900/80 text-white hover:bg-slate-800 font-bold rounded-xl border border-slate-700 transition">3</button>
+
+                <button onclick="appendBasic('0')" class="col-span-2 p-3.5 bg-slate-900/80 text-white hover:bg-slate-800 font-bold rounded-xl border border-slate-700 transition">0</button>
+                <button onclick="appendBasic('.')" class="p-3.5 bg-slate-900/80 text-white hover:bg-slate-800 font-bold rounded-xl border border-slate-700 transition">.</button>
+                <!-- Equal Button (reduced size to normal single grid cell) -->
+                <button onclick="calculateBasic()" class="p-3.5 bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700 text-slate-950 font-bold rounded-xl transition shadow-lg">=</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- About Modal Popup -->
+    <div id="aboutModal" class="fixed inset-0 bg-slate-950/80 backdrop-blur-sm hidden flex items-center justify-center p-4 z-50">
+        <div class="bg-slate-900 border border-amber-500/40 rounded-2xl p-6 max-w-sm w-full shadow-2xl text-center space-y-4">
+            <h3 class="text-lg font-bold text-amber-400">About Sree Ragam SHG</h3>
+            <p class="text-sm text-slate-300">Digital Ledger & Loan Utility Calculator for Self Help Group, Beerangole.</p>
+            <div class="py-2 border-t border-b border-slate-800 text-sm">
+                <span class="text-slate-400">Founder:</span> <span class="font-bold text-white">Unnikrishnan</span>
+            </div>
+            <button onclick="closeAboutModal()" class="w-full bg-amber-500 text-slate-950 font-bold py-2 rounded-xl hover:bg-amber-600 transition">Close</button>
+        </div>
+    </div>
+
+    <!-- Footer Note -->
+    <footer class="mt-6 text-xs text-slate-400 text-center">
+        Sree Ragam SHG Beerangole &copy; 2026
+    </footer>
+
+    <script>
+        // Modal Control
+        function openAboutModal() {
+            document.getElementById('aboutModal').classList.remove('hidden');
+        }
+
+        function closeAboutModal() {
+            document.getElementById('aboutModal').classList.add('hidden');
+        }
+
+        // Tab Switcher Logic
+        function switchTab(tab) {
+            const loanView = document.getElementById('loanView');
+            const basicView = document.getElementById('basicView');
+            const loanTabBtn = document.getElementById('loanTabBtn');
+            const basicTabBtn = document.getElementById('basicTabBtn');
+
+            if (tab === 'loan') {
+                loanView.classList.remove('hidden');
+                basicView.classList.add('hidden');
+                loanTabBtn.className = "flex-1 py-2 text-xs sm:text-sm font-bold rounded-lg transition duration-200 bg-amber-500 text-slate-950 shadow";
+                basicTabBtn.className = "flex-1 py-2 text-xs sm:text-sm font-bold rounded-lg transition duration-200 text-slate-400 hover:text-white";
+            } else {
+                basicView.classList.remove('hidden');
+                loanView.classList.add('hidden');
+                basicTabBtn.className = "flex-1 py-2 text-xs sm:text-sm font-bold rounded-lg transition duration-200 bg-amber-500 text-slate-950 shadow";
+                loanTabBtn.className = "flex-1 py-2 text-xs sm:text-sm font-bold rounded-lg transition duration-200 text-slate-400 hover:text-white";
+            }
+        }
+
+        // Loan Calculator Logic
+        function calculateLoan() {
+            const principal = parseFloat(document.getElementById('principal').value);
+            const ratePercentage = parseFloat(document.getElementById('rate').value);
+            const paymentMade = parseFloat(document.getElementById('paymentMade').value) || 0;
+            const startDateStr = document.getElementById('startDate').value;
+            const endDateStr = document.getElementById('endDate').value;
+
+            if (isNaN(principal) || isNaN(ratePercentage) || !startDateStr || !endDateStr) {
+                alert('Please enter valid input values.');
+                return;
+            }
+
+            const startDate = new Date(startDateStr);
+            const endDate = new Date(endDateStr);
+
+            const diffTime = endDate - startDate;
+            const diffDays = Math.round(diffTime / (1000 * 60 * 60 * 24));
+
+            if (diffDays < 0) {
+                alert('Calculation date cannot be earlier than loan date.');
+                return;
+            }
+
+            const exactInterest = (principal * (ratePercentage / 100) * diffDays) / 365;
+            const roundedInterest = Math.round(exactInterest);
+            const paymentMinusInterest = paymentMade - roundedInterest;
+            const finalAmount = principal - paymentMinusInterest;
+
+            document.getElementById('resPrincipal').innerText = '₹' + principal.toLocaleString('en-IN');
+            document.getElementById('resPayment').innerText = '₹' + paymentMade.toLocaleString('en-IN');
+            document.getElementById('resDays').innerText = diffDays + ' days';
+            document.getElementById('resInterest').innerText = '₹' + exactInterest.toFixed(2);
+            document.getElementById('resRounded').innerText = '₹' + roundedInterest;
+            document.getElementById('resPaymentMinusInterest').innerText = '₹' + paymentMinusInterest.toLocaleString('en-IN');
+            document.getElementById('resFinal').innerText = '₹' + finalAmount.toLocaleString('en-IN');
+
+            document.getElementById('result').classList.remove('hidden');
+        }
+
+        // Basic Calculator Logic
+        let calcInput = "0";
+
+        function updateDisplay() {
+            document.getElementById('calcDisplay').value = calcInput;
+        }
+
+        function appendBasic(val) {
+            if (calcInput === "0" && val !== '.') {
+                calcInput = val;
+            } else {
+                calcInput += val;
+            }
+            updateDisplay();
+        }
+
+        function clearBasic() {
+            calcInput = "0";
+            updateDisplay();
+        }
+
+        function backspaceBasic() {
+            if (calcInput.length > 1) {
+                calcInput = calcInput.slice(0, -1);
+            } else {
+                calcInput = "0";
+            }
+            updateDisplay();
+        }
+
+        function calculateBasic() {
+            try {
+                let result = eval(calcInput.replace('×', '*').replace('÷', '/'));
+                calcInput = String(Math.round(result * 100) / 100);
+            } catch (error) {
+                calcInput = "Error";
+            }
+            updateDisplay();
+        }
+
+        // Run initial loan calculation on page load
+        window.onload = calculateLoan;
+    </script>
+</body>
+</html>
